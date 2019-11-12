@@ -3,7 +3,7 @@
 Curacao is modular designed web framework for Golang.
 Inspired by [Martini](https://github.com/go-martini/martini)
 
-**Note: Curacao is heavy developing now. Don't use in production environment**
+**Note: Curacao is NOT tested and heavy developing now. Don't use in production environment**
 
 ## Getting Started
 ```
