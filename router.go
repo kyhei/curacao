@@ -24,35 +24,32 @@ func newMiddlewareResponse() *MiddlewareResponse {
 	return mr
 }
 
-// Dispatcher これは所謂Dispatcher
-type Dispatcher struct {
-	Routes     []Route
+type dispatcher struct {
+	Routes     []route
 	Middleware []interface{}
 }
 
-// NewDispatcher 新規Dispatcherを作成
-func newDispatcher() *Dispatcher {
-	dispatcher := new(Dispatcher)
+func newDispatcher() *dispatcher {
+	dispatcher := new(dispatcher)
 	return dispatcher
 }
 
-// Route Dispatcherを管理するもの
-type Route struct {
+type route struct {
 	method  string
 	reg     *regexp.Regexp
 	handler HTTPHandler
 }
 
-func newRoute(method string, path string, handler HTTPHandler) (*Route, bool) {
-	route := new(Route)
+func newRoute(method string, path string, handler HTTPHandler) (*route, bool) {
+	route := new(route)
 	route.method = strings.ToUpper(method)
 	route.handler = handler
 	route.reg = regexp.MustCompile(path)
 
-	return route, ValidateHandler(handler)
+	return route, validateHandler(handler)
 }
 
-func (d *Dispatcher) register(method string, path string, handler HTTPHandler) {
+func (d *dispatcher) register(method string, path string, handler HTTPHandler) {
 	convertedPath := convertURLString(path)
 	route, ok := newRoute(method, convertedPath, handler)
 	if ok == false {
@@ -63,15 +60,15 @@ func (d *Dispatcher) register(method string, path string, handler HTTPHandler) {
 	d.Routes = routes
 }
 
-func (d *Dispatcher) use(middleware interface{}) {
-	ok := ValidateMiddleware(middleware)
+func (d *dispatcher) use(middleware interface{}) {
+	ok := validateMiddleware(middleware)
 	if ok == false {
 		panic("middleware is invalid")
 	}
 	d.Middleware = append(d.Middleware, middleware)
 }
 
-func (d *Dispatcher) dispatch(r *http.Request) (
+func (d *dispatcher) dispatch(r *http.Request) (
 	HTTPHandler,
 	HTTPParams,
 	HTTPQuery,
@@ -96,17 +93,16 @@ func (d *Dispatcher) dispatch(r *http.Request) (
 	return func() int { return code }, nil, nil
 }
 
-// Router httpリクエストをルーティングします。
-func router(dispatcher Dispatcher) func(w http.ResponseWriter, r *http.Request) {
+func router(dispatcher dispatcher) func(w http.ResponseWriter, r *http.Request) {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		f, p, q := dispatcher.dispatch(r)
 
 		mrs := []interface{}{}
 		for _, m := range dispatcher.Middleware {
-			mr := ExecuteMiddleware(m, r)
+			mr := executeMiddleware(m, r)
 			if mr.OK == false {
-				Render(w, int(mr.Code), nil)
+				render(w, int(mr.Code), nil)
 				return
 			}
 
@@ -115,8 +111,8 @@ func router(dispatcher Dispatcher) func(w http.ResponseWriter, r *http.Request) 
 
 		args := []interface{}{r, p, q}
 		args = append(args, mrs...)
-		code, resp := ExecuteHandler(f, args)
-		Render(w, int(code), resp)
+		code, resp := executeHandler(f, args)
+		render(w, int(code), resp)
 	}
 }
 

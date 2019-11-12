@@ -5,6 +5,11 @@ Inspired by [Martini](https://github.com/go-martini/martini)
 
 **Note: Curacao is heavy developing now. Don't use in production environment**
 
+## Getting Started
+```
+go get github.com/kyhei/curacao
+```
+
 ```go
 package main
 
@@ -177,7 +182,7 @@ c.Use(forbidden)
 
 ```
 
-Below is example middlewara of Basic authentication.
+Below is example middleware of Basic authentication.
 
 ```go
 basicAuth := func(r *http.Request) (bool, int) {

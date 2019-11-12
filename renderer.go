@@ -4,8 +4,7 @@ import (
 	"net/http"
 )
 
-// Render redering http response
-func Render(
+func render(
 	w http.ResponseWriter,
 	code int,
 	body []byte,

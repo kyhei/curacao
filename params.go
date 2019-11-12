@@ -8,7 +8,7 @@ import (
 // HTTPParams HTTP paramaters
 type HTTPParams map[string]string
 
-// NewHTTPParams 新しいNewHTTPParamsを作成します。
+// NewHTTPParams make new HTTPParams
 func NewHTTPParams(path string, reg *regexp.Regexp) HTTPParams {
 	params := make(HTTPParams)
 

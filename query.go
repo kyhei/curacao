@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-// HTTPQuery URLに添付されているクエリ文字列について
+// HTTPQuery the type of HTTPQuery
 type HTTPQuery map[string]string
 
 // NewHTTPQuery convert HTTP query string to map[string]string

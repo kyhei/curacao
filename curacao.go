@@ -1,21 +1,15 @@
 package curacao
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
-
-// SayHello 挨拶をする。ただそれだけ
-func SayHello() {
-	fmt.Println("Hello, Curacao!")
-}
 
 // App the tyoe of App
 type App struct {
 	host       string
 	port       string
-	dispatcher *Dispatcher
+	dispatcher *dispatcher
 }
 
 // NewApp create New App

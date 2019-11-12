@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-// ParseJSONRequestBody HTTPリクエストのJSONボディをオブジェクトにパースします。
+// ParseJSONRequestBody Parse HTTP JSON request to interface{}
 func ParseJSONRequestBody(r *http.Request, data interface{}) error {
 
 	length, err := strconv.Atoi(r.Header.Get("Content-Length"))
@@ -34,7 +34,7 @@ func ParseJSONRequestBody(r *http.Request, data interface{}) error {
 	return nil
 }
 
-// SaveUploadedFile Httpリクエストのファイルボディをディスクに保存します。
+// SaveUploadedFile Save uploaded file to local disk
 func SaveUploadedFile(r *http.Request, attrName string, storagePath string) (*string, error) {
 
 	if !strings.HasSuffix(storagePath, "/") {

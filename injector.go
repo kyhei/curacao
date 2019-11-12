@@ -5,8 +5,8 @@ import (
 	"unsafe"
 )
 
-// ValidateMiddleware validate middleware before curacao start
-func ValidateMiddleware(middleware interface{}) bool {
+// validate middleware before curacao start
+func validateMiddleware(middleware interface{}) bool {
 	fnt := reflect.TypeOf(middleware)
 	if fnt.Kind() != reflect.Func {
 		println("the type of middleware is must be func")
@@ -16,8 +16,8 @@ func ValidateMiddleware(middleware interface{}) bool {
 	return true
 }
 
-// ExecuteMiddleware run curacao middleware
-func ExecuteMiddleware(middleware interface{}, args ...interface{}) *MiddlewareResponse {
+// run curacao middleware
+func executeMiddleware(middleware interface{}, args ...interface{}) *MiddlewareResponse {
 	fnt := reflect.TypeOf(middleware)
 
 	argsNum := fnt.NumIn()
@@ -57,8 +57,8 @@ func ExecuteMiddleware(middleware interface{}, args ...interface{}) *MiddlewareR
 	return response
 }
 
-// ValidateHandler validate request handler before curacao start
-func ValidateHandler(handler interface{}) bool {
+// validate request handler before curacao start
+func validateHandler(handler interface{}) bool {
 	fnt := reflect.TypeOf(handler)
 	if fnt.Kind() != reflect.Func {
 		return false
@@ -67,8 +67,8 @@ func ValidateHandler(handler interface{}) bool {
 	return true
 }
 
-// ExecuteHandler run http handler function
-func ExecuteHandler(handler interface{}, args []interface{}) (int, []byte) {
+// run http handler function
+func executeHandler(handler interface{}, args []interface{}) (int, []byte) {
 	fnt := reflect.TypeOf(handler)
 
 	argsNum := fnt.NumIn()
