@@ -5,6 +5,10 @@ Inspired by [Martini](https://github.com/go-martini/martini)
 
 **Note: Curacao is NOT tested and heavy developing now. Don't use in production environment**
 
+## TODOs
+ - テストコードを書く。
+ - ドキュメントを充実させる。
+
 ## Getting Started
 ```
 go get github.com/kyhei/curacao
