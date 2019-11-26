@@ -233,5 +233,58 @@ c.Get(
 
 ```
 
+## Utility functions
+
+Some utility functions are available.
+In order to use them, just
+
+```go
+import "github.com/kyhei/curacao/util"
+```
+
+### `util.ToJSON(data interface{})`
+
+This is a wrapper of `json.Marshal`.
+
+```go
+// GET /json/curacao?lang=go
+// -> {"params":{"name":"curacao"},"query":{"lang":"go"}}
+c.Get(
+  "/json/:name",
+  func(params curacao.HTTPParams, query curacao.HTTPQuery) []byte {
+    body := map[string]interface{}{
+      "params": params,
+      "query":  query,
+    }
+
+    return util.ToJSON(body)
+  },
+)
+```
+
+### `util.ParseJSONRequestBody(r *http.Request, data interface{})`
+
+Parse JSON Request body to interface{}.
+
+```go
+// POST /parse
+// BODY {"name": "curacao"}
+// -> {"struct":{"Name":"curacao"}}
+c.Post(
+  "/parse",
+  func(r *http.Request) []byte {
+    var s struct{ Name string }
+
+    util.ParseJSONRequestBody(r, &s)
+
+    response := map[string]interface{}{"struct": s}
+
+    return util.ToJSON(response)
+  },
+)
+```
+
+
+
 ## License
 Curacao is distributed by The MIT License, see LICENSE

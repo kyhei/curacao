@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
@@ -15,20 +16,22 @@ import (
 // ParseJSONRequestBody Parse HTTP JSON request to interface{}
 func ParseJSONRequestBody(r *http.Request, data interface{}) error {
 
-	length, err := strconv.Atoi(r.Header.Get("Content-Length"))
-	if err != nil {
+	if _, err := strconv.Atoi(r.Header.Get("Content-Length")); err != nil {
 		return errors.New("bad Content-Length")
 	}
 
-	body := make([]byte, length)
-	length, err = r.Body.Read(body)
-	if err != nil && err != io.EOF {
-		return errors.New("could not read body")
+	body := r.Body
+	defer body.Close()
+
+	buf := new(bytes.Buffer)
+	if _, err := io.Copy(buf, body); err != nil {
+		return errors.New(err.Error())
 	}
 
-	err = json.Unmarshal(body[:length], &data)
+	err := json.Unmarshal(buf.Bytes(), data)
+
 	if err != nil {
-		return errors.New("could not parse json srting")
+		return errors.New("could not parse json string")
 	}
 
 	return nil
