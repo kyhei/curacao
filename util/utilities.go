@@ -50,6 +50,10 @@ func SaveUploadedFile(r *http.Request, attrName string, storagePath string) (*st
 	}
 	defer file.Close()
 
+	if _, err := os.Stat(storagePath); os.IsNotExist(err) {
+		os.Mkdir(storagePath, 0777)
+	}
+
 	saveFile, err := os.Create(storagePath + fileHeader.Filename)
 	if err != nil {
 		log.Println(err.Error())

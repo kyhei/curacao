@@ -284,7 +284,25 @@ c.Post(
 )
 ```
 
+### `util.SaveUploadedFile(r *http.Request, attName string, saveDir string)`
 
+Save uploaded file in saveDir
+
+```go
+// POST /upload
+// save an attached file as multipart/form-data in ./storage
+c.Post(
+  "/upload",
+  func(r *http.Request) ([]byte, int) {
+    if _, err := util.SaveUploadedFile(r, "file", "./storage/"); err != nil {
+      log.Fatalln(err.Error())
+      return []byte("upload error."), 500
+    }
+
+    return []byte("uploaded."), 200
+  },
+)
+```
 
 ## License
 Curacao is distributed by The MIT License, see LICENSE
