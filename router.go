@@ -27,10 +27,12 @@ func newMiddlewareResponse() *MiddlewareResponse {
 type dispatcher struct {
 	Routes     []route
 	Middleware []interface{}
+	Header     map[string]string
 }
 
 func newDispatcher() *dispatcher {
 	dispatcher := new(dispatcher)
+	dispatcher.Header = make(map[string]string)
 	return dispatcher
 }
 
@@ -68,6 +70,10 @@ func (d *dispatcher) use(middleware interface{}) {
 	d.Middleware = append(d.Middleware, middleware)
 }
 
+func (d *dispatcher) setHeader(name string, value string) {
+	d.Header[name] = value
+}
+
 func (d *dispatcher) dispatch(r *http.Request) (
 	HTTPHandler,
 	HTTPParams,
@@ -102,7 +108,7 @@ func router(dispatcher dispatcher) func(w http.ResponseWriter, r *http.Request) 
 		for _, m := range dispatcher.Middleware {
 			mr := executeMiddleware(m, r)
 			if mr.OK == false {
-				render(w, int(mr.Code), nil)
+				render(w, dispatcher.Header, int(mr.Code), nil)
 				return
 			}
 
@@ -112,7 +118,7 @@ func router(dispatcher dispatcher) func(w http.ResponseWriter, r *http.Request) 
 		args := []interface{}{r, p, q}
 		args = append(args, mrs...)
 		code, resp := executeHandler(f, args)
-		render(w, int(code), resp)
+		render(w, dispatcher.Header, int(code), resp)
 	}
 }
 

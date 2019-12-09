@@ -233,6 +233,16 @@ c.Get(
 
 ```
 
+## HTTP Response Header
+
+Curacao can set any type of HTTP Response Header
+
+```go
+c.Header("Content-Type", "application/json")
+
+c.Header("Access-Control-Allow-Origin", "https://trusted.domain.com")
+```
+
 ## Utility functions
 
 Some utility functions are available.

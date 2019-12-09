@@ -31,6 +31,11 @@ func (app *App) Use(middleware interface{}) {
 	app.dispatcher.use(middleware)
 }
 
+// Header set HTTP Response Header
+func (app *App) Header(name string, value string) {
+	app.dispatcher.setHeader(name, value)
+}
+
 // Get short hand of Register
 func (app *App) Get(path string, handler HTTPHandler) {
 	app.dispatcher.register("GET", path, handler)
