@@ -243,6 +243,37 @@ c.Header("Content-Type", "application/json")
 c.Header("Access-Control-Allow-Origin", "https://trusted.domain.com")
 ```
 
+## CORS
+
+For CORS, Curacao provides some functions.
+
+```go
+c.Header("Access-Control-Allow-Origin", "*")
+c.Header("Access-Control-Allow-Methods", "GET, POST")
+c.Header("Access-Control-Allow-Headers", "Content-Type")
+
+c.PostWithPreflight("/api/create", func(r *http.Request) (int, []byte) {
+  // some business logic...
+  return http.StatusCreated, util.ToJSON(response)
+})
+```
+
+`xxWithPreflight()` methods register HTTP handler and create addtional endpoint for CORS preflight request.
+
+Curacao has following `xxWithPreflight()` methods.
+
+```go
+func (app *App) RegisterWithPreflight(method string, path string, handler HTTPHandler)
+```
+
+```go
+func (app *App) GetWithPreflight(path string, handler HTTPHandler)
+```
+
+```go
+func (app *App) PostWithPreflight(path string, handler HTTPHandler)
+```
+
 ## Utility functions
 
 Some utility functions are available.

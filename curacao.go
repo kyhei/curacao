@@ -26,6 +26,12 @@ func (app *App) Register(method string, path string, handler HTTPHandler) {
 	app.dispatcher.register(method, path, handler)
 }
 
+// RegisterWithPreflight register HTTP handler with OPTIONS method
+func (app *App) RegisterWithPreflight(method string, path string, handler HTTPHandler) {
+	app.Register(method, path, handler)
+	app.Register("OPTIONS", path, func() int { return http.StatusOK })
+}
+
 // Use register middleware
 func (app *App) Use(middleware interface{}) {
 	app.dispatcher.use(middleware)
@@ -41,9 +47,21 @@ func (app *App) Get(path string, handler HTTPHandler) {
 	app.dispatcher.register("GET", path, handler)
 }
 
+// GetWithPreflight register HTTP handler with OPTIONS method
+func (app *App) GetWithPreflight(path string, handler HTTPHandler) {
+	app.Get(path, handler)
+	app.Register("OPTIONS", path, func() int { return http.StatusOK })
+}
+
 // Post short hand of Register
 func (app *App) Post(path string, handler HTTPHandler) {
 	app.dispatcher.register("POST", path, handler)
+}
+
+// PostWithPreflight register HTTP handler with OPTIONS method
+func (app *App) PostWithPreflight(path string, handler HTTPHandler) {
+	app.Post(path, handler)
+	app.Register("OPTIONS", path, func() int { return http.StatusOK })
 }
 
 // Start start HTTP server
