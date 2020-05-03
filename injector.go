@@ -1,6 +1,7 @@
 package curacao
 
 import (
+	"net/http"
 	"reflect"
 	"unsafe"
 )
@@ -23,10 +24,13 @@ func executeMiddleware(middleware interface{}, args ...interface{}) *MiddlewareR
 	argsNum := fnt.NumIn()
 	middlewareArgs := make([]reflect.Value, argsNum)
 
+	writerType := reflect.TypeOf((*http.ResponseWriter)(nil)).Elem()
+
 	for i := 0; i < argsNum; i++ {
 		argType := fnt.In(i)
 		for _, arg := range args {
-			if argType == reflect.TypeOf(arg) {
+			if argType == reflect.TypeOf(arg) ||
+				(reflect.TypeOf(arg).Implements(writerType) && argType.Implements(writerType)) {
 				middlewareArgs[i] = reflect.ValueOf(arg)
 				break
 			}

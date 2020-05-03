@@ -106,7 +106,7 @@ func router(dispatcher dispatcher) func(w http.ResponseWriter, r *http.Request) 
 
 		mrs := []interface{}{}
 		for _, m := range dispatcher.Middleware {
-			mr := executeMiddleware(m, r)
+			mr := executeMiddleware(m, w, r)
 			if mr.OK == false {
 				render(w, dispatcher.Header, int(mr.Code), nil)
 				return
